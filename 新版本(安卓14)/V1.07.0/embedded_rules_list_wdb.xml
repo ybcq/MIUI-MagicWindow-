@@ -1,0 +1,14 @@
+    <!-- For WDB/RedMi Use Only-->
+    <package name="com.sina.weibo" fullRule="nra:cr:rcr:nr" />
+    <package name="com.tencent.tim" fullRule="nra:cr:rcr" />
+    <package name="com.jiongji.andriod.card" fullRule="nra:cr:rcr" />
+    <package name="com.joyshebao.joy" fullRule="nra:cr:rcr:nr" />
+    <package name="com.uzero.baimiao" fullRule="nra:cr:rcr" />
+    <package name="com.sina.weibog3" fullRule="nra:cr:rcr:nr" />
+    <package name="com.coolapk.market" fullRule="nra:cr:rcr" />
+    <package name="com.dragon.read" fullRule="nra:cr:rcr" />
+    <package name="com.sup.android.superb" fullRule="nra:cr:rcr" />
+    <package name="com.netease.cloudmusic" fullRule="nra:cr:rcr" />
+    <package name="com.kuangxiangciweimao.novel" fullRule="nra:cr:rcr" />
+    <package name="com.hujiang.cctalk" fullRule="nra:cr:rcr" />
+    <package name="com.twitter.android" fullRule="nra:cr:rcr" />

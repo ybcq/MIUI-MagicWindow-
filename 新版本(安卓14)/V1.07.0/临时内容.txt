@@ -1,0 +1,16 @@
+scaleMode="1" 
+clearTop="true"
+sizecompatRatio="5:4" sizecompatRule="*" 
+splitRatio="0.35" 
+
+placeholder=""
+activityRule=""
+splitPairRule=""
+transitionRules=""
+fullRule="nra:cr:rcr" 
+
+splitRatio
+isShowDivider="true" supportFullSize="true" splitRatio
+
+adb -s 9b2cec5b shell dumpsys activity top | grep ACTIVITY
+adb shell dumpsys activity top | grep ACTIVITY
