@@ -1,0 +1,11 @@
+import console;
+import process;
+ 
+var s = string.load("\embedded_rules_list.xml")
+sf = /*splitRatio\=\"[\d.]+\"*/
+sn = string.replace(s, sf, "")
+var ret = string.save("\embedded_rules_list_fold.xml", sn)
+if(ret)console.log("已生成折叠屏版")
+
+process.execute("分发")
+sleep(3000)
