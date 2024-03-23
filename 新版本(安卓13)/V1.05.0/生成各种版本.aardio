@@ -1,0 +1,256 @@
+import console;
+import process;
+import sevenZip.cmd;
+import fsys;
+
+var wdb = "" //稳定版
+var wdbpath = "E:\Projects\完美横屏应用计划\1.稳定版\"
+
+var hmb = "" //稳定版
+var hmbpath = "E:\Projects\完美横屏应用计划\1.红米版\"
+
+var kfb = "" //自用版
+var kfbpath = "E:\Projects\完美横屏应用计划\2.开发版\"
+
+var zdp = "" //折叠屏
+var zdppath = "E:\Projects\完美横屏应用计划\3.折叠屏专用\"
+
+var max6 = "" //折叠屏
+var max6path = "E:\Projects\完美横屏应用计划\3.6Max专用\"
+
+var pp = "" //折叠屏
+var ppospath = "E:\Projects\完美横屏应用计划\3.澎湃OS专用\"
+
+var xmlpath = "common\product\etc\embedded_rules_list.xml" //XML文件地址，与上边地址拼接
+var propath = "product\etc\embedded_rules_list.xml" //KSU兼容文件，与上边地址拼接
+var bakpath = "common\product\etc\embedded_rules_list_bak" //XML文件地址，与上边地址拼接
+
+//===================================生成自用版=====================================
+//安卓12版本调整
+var kfb12 = string.load("\embedded_rules_list_dbg.xml")
+zyb12 = string.replace(kfb12, "0.35", "0.3")
+zyb12 = string.replace(zyb12, "0.42", "0.3")
+zyb12 = string.replace(zyb12, "0.44", "0.3")
+zyb12 = string.replace(zyb12, "0.65", "0.7")
+
+//更改哔哩哔哩的写法为自用
+var b1 = /*@placeholder="tv.danmaku.bili.MainActivityV2:com.bilibili.search.main.BiliMainSearchActivity"*/
+var b2 = /*placeholder="tv.danmaku.bili.MainActivityV2:tv.danmaku.bili.ui.main2.WatchLaterActivity"*/
+zyb12 = string.replace(zyb12, b1, b2)
+
+//分发到自用版文件夹
+var ret = string.save(kfbpath + xmlpath, zyb12)
+var ret = string.save(kfbpath + propath, zyb12)
+if(ret)console.log("已生成自用版(安卓12以上)")
+
+//安卓11版本调整
+var kfb11 = string.load("\magicWindowFeature_magic_window_application_list.xml")
+//分发到稳定版文件夹
+var ret = string.save(kfbpath + "common\system\magicWindowFeature_magic_window_application_list.xml", kfb11)
+if(ret)console.log("已生成自用版(安卓11)")
+//复制列表文件
+//fsys.copy("magic_window_setting_config.xml", kfbpath + "common\system\users\0\magic_window_setting_config.xml")
+string.save(kfbpath + "common\system\users\0\magic_window_setting_config.xml", string.load("\magic_window_setting_config.xml"))
+
+//===================================生成稳定版=====================================
+//安卓12版本调整
+var kfb12 = string.load("\embedded_rules_list_dbg.xml")
+
+//调整比例以适应红米平板
+//wdb12 = string.replace(kfb12, "0.42", "0.46")
+//wdb12 = string.replace(wdb12, "0.44", "0.46")
+
+//不再为红米平板调整比例
+wdb12 = kfb12
+
+var wdbnew = ""
+var wdbend = ""
+
+//排除需要调整的内容
+for lines in string.lines(wdb12){
+	if(!string.startWith(lines, "</")){
+	    if(lines != ""){
+	    	//排除需要调整的内容
+			if(
+				!string.find(lines, '\"com.sina.weibo\"') && //排除新浪微博
+				!string.find(lines, '\"com.tencent.tim\"') && //排除TIM
+				!string.find(lines, '\"com.jiongji.andriod.card\"') && //排除京东白条
+				!string.find(lines, '\"com.joyshebao.joy\"') && //排除
+				!string.find(lines, '\"com.uzero.baimiao\"') && //排除白描
+				!string.find(lines, '\"com.sina.weibog3\"') && //排除微博3G版
+				!string.find(lines, '\"com.coolapk.market\"') && //排除酷安
+				!string.find(lines, '\"com.sup.android.superb\"') && //排除
+				!string.find(lines, '\"com.netease.cloudmusic\"') && //排除喜马拉雅FM
+				!string.find(lines, '\"com.ximalaya.ting.android\"') && //排除喜马拉雅FM
+				!string.find(lines, '\"com.netease.cloudmusic\"') && //排除喜马拉雅FM
+				!string.find(lines, '\"com.kuangxiangciweimao.novel\"') && //排除喜马拉雅FM
+				!string.find(lines, '\"com.hujiang.cctalk\"') //排除小红书
+			)  
+			wdbnew = wdbnew + lines + '\r\n'
+		}
+	}
+	else wdbend = lines //获取最后一行
+}
+
+//加入补充字符串
+var add = string.load("\embedded_rules_list_wdb.xml")
+wdbnew = wdbnew + add + '\r\n' + wdbend + '\r\n'
+
+//分发到稳定版文件夹
+var ret = string.save(wdbpath + xmlpath, wdbnew)
+var ret = string.save(wdbpath + propath, wdbnew)
+if(ret)console.log("已生成稳定版(安卓12以上)")
+
+//安卓11版本调整
+var kfb11 = string.load("\magicWindowFeature_magic_window_application_list.xml")
+var d1 = /*@is_dragable="true"*/
+var d2 = /*is_dragable=""*/
+//var wdb11 = string.replace(kfb11, d1, d2)
+var wdb11 = kfb11
+
+//分发到稳定版文件夹
+var ret = string.save(wdbpath + "common\system\magicWindowFeature_magic_window_application_list.xml", wdb11)
+if(ret)console.log("已生成稳定版(安卓11)")
+
+//复制列表文件
+//fsys.copy("magic_window_setting_config.xml", wdbpath + "common\system\users\0\magic_window_setting_config.xml")
+string.save(wdbpath + "common\system\users\0\magic_window_setting_config.xml", string.load("\magic_window_setting_config.xml"))
+
+
+//===================================生成红米版=====================================
+//生成红米版
+var hmb12 = wdb12
+//调整比例以适应红米平板
+hmb12 = string.replace(hmb12, "0.42", "0.49")
+hmb12 = string.replace(hmb12, "0.44", "0.49")
+
+//分发到红米版文件夹
+var ret = string.save(hmbpath + xmlpath, hmb12)
+var ret = string.save(hmbpath + propath, hmb12)
+if(ret)console.log("已生成红米版(安卓12以上)")
+
+//分发到红米版文件夹
+var ret = string.save(hmbpath + "common\system\magicWindowFeature_magic_window_application_list.xml", wdb11)
+if(ret)console.log("已生成红米版(安卓11)")
+
+//===================================生成折叠屏版=====================================
+
+//安卓12版本调整，基于稳定版，去除比例以适应折叠屏
+sr = /*splitRatio\=\"[\d.]+\"*/
+zdp12 = string.replace(wdbnew, sr, "")
+
+//清空目标文件
+//string.save(xml, '')
+var zdpnew = ""
+var zdpend = ""
+
+for lines in string.lines(zdp12){
+	if(!string.startWith(lines, "</")){
+		if(lines != ""){
+			if(!string.find(lines, '\"com.taobao.idlefish\"') && //排除闲鱼
+			   !string.find(lines, '\"com.baidu.netdisk\"') && //排除百度网盘
+			   !string.find(lines, '\"com.eg.android.AlipayGphone\"') && //排除支付宝
+			   !string.find(lines, '\"com.taobao.taobao\"') && //排除支付宝
+			   !string.find(lines, '\"com.sankuai.meituan\"') && //排除美团
+			   !string.find(lines, '\"com.jingdong.app.mall\"') && //排除京东
+			   !string.find(lines, '\"com.jd.jdlite\"') && //排除惊喜特价
+			   !string.find(lines, '\"com.tencent.tim\"') //排除TIM
+			) 
+			zdpnew = zdpnew + lines + '\r\n'
+		}
+	}
+	else zdpend = lines //获取最后一行
+}
+
+//加入补充字符串
+var add = string.load("\embedded_rules_list_fold.xml")
+zdpnew = zdpnew + add + '\r\n' + zdpend + '\r\n'
+
+//分发到折叠屏文件夹
+var ret = string.save(zdppath + xmlpath, zdpnew)
+var ret = string.save(zdppath + propath, zdpnew)
+if(ret)console.log("已生成折叠屏版(安卓12)")
+
+//分发到折叠屏文件夹(和稳定版共用一个)
+var ret = string.save(zdppath + "common\system\magicWindowFeature_magic_window_application_list.xml", wdb11)
+if(ret)console.log("已生成折叠屏版(安卓11)")
+
+//复制列表文件(和稳定版共用一个)
+//fsys.copy("magic_window_setting_config.xml", zdppath + "common\system\users\0\magic_window_setting_config.xml")
+string.save(zdppath + "common\system\users\0\magic_window_setting_config.xml", string.load("\magic_window_setting_config.xml"))
+
+//===================================生成6Max移植包版=====================================
+
+//安卓12版本调整(基于稳定版)
+max612 = string.replace(wdbnew, "0.35", "0.3")
+max612 = string.replace(max612, "0.42", "0.3")
+max612 = string.replace(max612, "0.44", "0.3")
+max612 = string.replace(max612, "0.46", "0.3")
+max612 = string.replace(max612, "0.65", "0.7")
+
+//分发到6Max和澎湃文件夹
+var ret = string.save(max6path + xmlpath, max612)
+var ret = string.save(max6path + propath, max612)
+var ret = string.save(ppospath + xmlpath, max612)
+var ret = string.save(ppospath + propath, max612)
+if(ret)console.log("已生成6Max版(安卓12以上)")
+
+//分发到6Max和澎湃文件夹(和稳定版共用一个)
+var ret = string.save(max6path + "common\system\magicWindowFeature_magic_window_application_list.xml", wdb11)
+var ret = string.save(ppospath + "common\system\magicWindowFeature_magic_window_application_list.xml", wdb11)
+if(ret)console.log("已生成6Max版(安卓11)")
+
+//复制列表文件(和稳定版共用一个)
+//fsys.copy("magic_window_setting_config.xml", max6path + "common\system\users\0\magic_window_setting_config.xml")
+string.save(max6path + "common\system\users\0\magic_window_setting_config.xml", string.load("\magic_window_setting_config.xml"))
+string.save(ppospath + "common\system\users\0\magic_window_setting_config.xml", string.load("\magic_window_setting_config.xml"))
+
+//同步最新的bak文件
+//fsys.copy("embedded_rules_list_6Max.xml", wdbpath + bakpath)
+//fsys.copy("embedded_rules_list_6Max.xml", hmbpath + bakpath)
+//fsys.copy("embedded_rules_list_6Max.xml", kfbpath + bakpath)
+//fsys.copy("embedded_rules_list_6Max.xml", zdppath + bakpath)
+//fsys.copy("embedded_rules_list_6Max.xml", max6path + bakpath)
+
+string.save(wdbpath + bakpath, string.load("\embedded_rules_list_6Max.xml"))
+string.save(hmbpath + bakpath, string.load("\embedded_rules_list_6Max.xml"))
+string.save(kfbpath + bakpath, string.load("\embedded_rules_list_6Max.xml"))
+string.save(zdppath + bakpath, string.load("\embedded_rules_list_6Max.xml"))
+string.save(max6path + bakpath, string.load("\embedded_rules_list_6Max.xml"))
+string.save(ppospath + bakpath, string.load("\embedded_rules_list_6Max.xml"))
+
+//===================================打包压缩=====================================
+var num = console.getText( "请输入版本号:" )
+
+//压缩稳定版
+sevenZip.cmd.compress( wdbpath + "*"
+    ,"E:\Projects\完美横屏应用计划\1.稳定版(推荐)_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+sevenZip.cmd.compress( hmbpath + "*"
+    ,"E:\Projects\完美横屏应用计划\1.红米版(推荐)_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+sevenZip.cmd.compress( kfbpath + "*"
+    ,"E:\Projects\完美横屏应用计划\X.自用版(请勿下载)_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+sevenZip.cmd.compress( zdppath + "*"
+    ,"E:\Projects\完美横屏应用计划\2.折叠屏专用_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+sevenZip.cmd.compress( max6path + "*"
+    ,"E:\Projects\完美横屏应用计划\3.6Max移植包专用_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+sevenZip.cmd.compress( ppospath + "*"
+    ,"E:\Projects\完美横屏应用计划\3.澎湃OS专用_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+process.explore("E:\Projects\完美横屏应用计划\")

@@ -1,0 +1,111 @@
+import console;
+import process;
+
+import sevenZip.cmd;
+import fsys;
+
+//生成折叠屏版
+var s = string.load("\embedded_rules_list.xml")
+sf = /*splitRatio\=\"[\d.]+\"*/
+sn = string.replace(s, sf, "")
+
+var xml_str = sn
+//清空目标文件
+//string.save(xml, '')
+var new_str = ""
+
+for lines in string.lines(xml_str){
+	if(!string.startWith(lines, "</")){
+		if(lines != ""){
+			if(!string.find(lines, '\"com.taobao.idlefish\"') && //排除闲鱼
+			   !string.find(lines, '\"com.baidu.netdisk\"') && //排除百度网盘
+			   !string.find(lines, '\"com.eg.android.AlipayGphone\"') && //排除支付宝
+			   !string.find(lines, '\"com.taobao.taobao\"') && //排除支付宝
+			   !string.find(lines, '\"com.sankuai.meituan\"') && //排除美团
+			   !string.find(lines, '\"com.jingdong.app.mall\"') && //排除京东
+			   !string.find(lines, '\"com.jd.jdlite\"') && //排除惊喜特价
+			   !string.find(lines, '\"com.tencent.tim\"')) //排除TIM
+			   
+				new_str = new_str + lines + '\r\n'
+		}
+	}
+	else end_str = lines //获取最后一行
+}
+
+//io.print("> 结束字符串为", end_str)
+
+//增加QQ
+qq = /*    <package name="com.tencent.mobileqq" activityRule="com.tencent.mobileqq.filemanager.fileviewer.FileBrowserActivity,com.tencent.mobileqq.filemanager.fileviewer.TroopFileDetailBrowserActivity,cooperation.qqfav.QfavPluginProxyActivity$SingleTop,cooperation.qqfav.QfavPluginProxyActivity$ImageViewer,com.tencent.mobileqq.activity.shortvideo.ShortVideoPlayActivity,com.tencent.av.ui.AVActivity,com.tencent.av.ui.VideoInviteActivity" splitPairRule="com.tencent.mobileqq.activity.SplashActivity:*" transitionRules="com.tencent.mobileqq.mini.appbrand.ui.AppBrandUI,com.tencent.mobileqq.mini.appbrand.ui.AppBrandUI1,com.tencent.mobileqq.minigame.ui.GameActivity1,com.tencent.mobileqq.minigame.ui.GameActivity2,com.tencent.mobileqq.activity.LoginActivity" />*/
+new_str = new_str + qq + '\r\n'
+
+//改回钉钉
+dd = /*    <package name="com.alibaba.android.rimet" activityRule="com.alibaba.android.dingtalkim.activities.VideoPlayerActivityV2,com.alibaba.android.dingtalk.player.VideoPlayerActivity,com.alibaba.dingtalk.cspace.activity.SpacePreviewActivity,com.alibaba.android.dingtalk.live.ui.LiveVideoPlayerActivity,com.alibaba.dingtalk.cspace.activity.SpacePreviewV1Activity,com.alibaba.dingtalk.cspace.activity.SpacePicPreviewActivity,com.alibaba.android.rimet.biz.im.activities.PicViewActivity,com.alibaba.android.user.pwd.activities.LockScreenPwdActivity,com.alibaba.dingtalk.flutterimpl.container.DTFlutterActivity,com.alibaba.android.teleconf.mozi.activity.TeleVideoConfActivity" splitPairRule="com.alibaba.android.rimet.biz.LaunchHomeActivity:*" transitionRules="com.alibaba.android.rimet.biz.BokuiActivity,com.alibaba.android.user.login.NewUserLoginActivity,com.alibaba.android.user.login.SignUpWithPwdActivity,com.alibaba.android.rimet.PrivacyPolicyActivity" />*/
+new_str = new_str + dd + '\r\n'
+
+//改回淘宝
+tb = /*    <package name="com.taobao.taobao" isShowDialog="true" />*/
+new_str = new_str + tb + '\r\n'
+
+//改回京东
+jd = /*    <package name="com.jingdong.app.mall" splitRatio="0.49" placeholder="com.jingdong.app.mall.MainFrameActivity:com.jingdong.common.jdreactFramework.activities.JDReactChannelCenterActivity" splitPairRule="com.jd.lib.search.view.Activity.SearchActivity:com.jd.lib.search.view.Activity.ProductListActivity,com.jd.lib.search.view.Activity.ProductListActivity:com.jd.lib.productdetail.ProductDetailActivity" />*/
+new_str = new_str + jd + '\r\n'
+
+sn = new_str + end_str + '\r\n'
+	
+var ret = string.save("\embedded_rules_list_fold.xml", sn)
+if(ret)console.log("已生成折叠屏版")
+
+//生成红米专用版
+var s = string.load("\embedded_rules_list.xml")
+sr = string.replace(s, "0.42", "0.46")
+sr = string.replace(sr, "0.44", "0.49")
+
+var ret = string.save("\embedded_rules_list_redmi.xml", sr)
+if(ret)console.log("已生成红米专用版")
+
+//生成6Max专用版
+var s = string.load("\embedded_rules_list.xml")
+sr = string.replace(s, "0.35", "0.3")
+sr = string.replace(sr, "0.42", "0.3")
+sr = string.replace(sr, "0.44", "0.5")
+sr = string.replace(sr, "0.49", "0.5")
+sr = string.replace(sr, "0.65", "0.7")
+
+var ret = string.save("\embedded_rules_list_6max.xml", sr)
+if(ret)console.log("已生成6Max专用版")
+
+process.execute("分发")
+
+sleep(1000)
+//console.pause(true);
+
+import sevenZip.cmd;
+var num = console.getText( "请输入版本号:" )
+
+//压缩稳定版
+sevenZip.cmd.compress( "E:\Projects\完美横屏应用计划\1.稳定版(推荐)\*"
+    ,"E:\Projects\完美横屏应用计划\1.稳定版(推荐)_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+sevenZip.cmd.compress( "E:\Projects\完美横屏应用计划\2.开发版\*"
+    ,"E:\Projects\完美横屏应用计划\2.开发版_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+sevenZip.cmd.compress( "E:\Projects\完美横屏应用计划\3.折叠屏专用\*"
+    ,"E:\Projects\完美横屏应用计划\3.折叠屏专用_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+sevenZip.cmd.compress( "E:\Projects\完美横屏应用计划\3.红米专用\*"
+    ,"E:\Projects\完美横屏应用计划\3.红米专用_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+sevenZip.cmd.compress( "E:\Projects\完美横屏应用计划\3.6Max专用\*"
+    ,"E:\Projects\完美横屏应用计划\3.6Max专用_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+process.explore("E:\Projects\完美横屏应用计划\")

@@ -1,0 +1,22 @@
+import console
+io.open()
+var path = "E:\Projects\完美横屏应用计划\新版本(安卓12)\V1.02.0\embedded_rules_list_dbg.xml"
+var new = "E:\Projects\完美横屏应用计划\官方原版\cloudFeature_embedded_rules_list_6Max.xml"
+
+var str = string.load(path)
+var strnew = ""
+
+for line in io.lines(new){
+	var m = /*name\="([\a\d\_\.]+)"*/
+	var name = string.match(line, m)
+	if(name){
+		if(!string.find(str, "@" + name)){
+			strnew = strnew + line + '\r\n'
+		}
+	}
+}
+
+io.print(strnew)
+var ret = string.save("E:\Projects\完美横屏应用计划\临时文件\tmp.txt", strnew, )
+//io.print(ret) 
+console.pause()

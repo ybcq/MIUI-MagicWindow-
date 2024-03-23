@@ -1,0 +1,25 @@
+import console; 
+import process;
+
+import sevenZip.cmd;
+
+var num = console.getText( "请输入版本号:" )
+
+//压缩稳定版
+sevenZip.cmd.compress( "\1.稳定版(推荐)\*"
+    ,"\1.稳定版(推荐)_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+sevenZip.cmd.compress( "\2.开发版\*"
+    ,"\2.开发版_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+sevenZip.cmd.compress( "\3.折叠屏专用\*"
+    ,"\3.折叠屏专用_V" + num + ".zip"
+    ,console.log //这里可以设置一个回调函数,输出回显结果
+)
+
+process.execute("\")
+//console.pause(true);
