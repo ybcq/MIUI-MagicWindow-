@@ -1,0 +1,6 @@
+id=MIUI_MagicWindow+
+name=MIUI MagicWindow+
+version=V1.00.0
+versionCode=1000
+author=御坂初琴
+description=一键去除所有非安卓官方的横屏适配代码，包括MIUI自己适配的横屏应用代码，回归安卓原本的样子。
